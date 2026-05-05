@@ -30,8 +30,8 @@ func NewUser(ctx context.Context, db *sql.DB, logger logger.LoggerIF) (*User, er
 
 	name := "User"
 
-	logger.Infof(ctx, "Initializing %s userlication.", name)
-	defer logger.Infof(ctx, "Finished initializing %s userlication.", name)
+	logger.Infof(ctx, "Initializing %s application.", name)
+	defer logger.Infof(ctx, "Finished initializing %s application.", name)
 
 	repository, err := NewRepository(name, db, logger)
 	if err != nil {
@@ -67,19 +67,19 @@ func (a *User) GetName() string {
 }
 
 func (a *User) Build(ctx context.Context, r *chi.Mux) error {
-	a.logger.Infof(ctx, "Building %s userlication routes.", a.name)
-	defer a.logger.Infof(ctx, "Finished building %s userlication routes.", a.name)
+	a.logger.Infof(ctx, "Building %s application routes.", a.name)
+	defer a.logger.Infof(ctx, "Finished building %s application routes.", a.name)
 	return newUserRoutes(ctx, r, a.handlers)
 }
 
 func (a *User) Health(ctx context.Context) error {
-	a.logger.Infof(ctx, "%s userlication - received request to ping the database.", a.name)
+	a.logger.Infof(ctx, "%s application - received request to ping the database.", a.name)
 	return a.services.Health(ctx)
 }
 
 func (a *User) Close(ctx context.Context) error {
-	a.logger.Infof(ctx, "Closing %s userlication.", a.name)
-	defer a.logger.Infof(ctx, "Finished closing %s userlication.", a.name)
+	a.logger.Infof(ctx, "Closing %s application.", a.name)
+	defer a.logger.Infof(ctx, "Finished closing %s application.", a.name)
 	if a.db != nil {
 		if err := a.db.Close(); err != nil {
 			return err

@@ -85,7 +85,7 @@ func TestHandlersCreate(t *testing.T) {
 		defer res.Body.Close()
 
 		assert.Equal(t, http.StatusBadRequest, res.StatusCode)
-		assert.Equal(t, "userlication/json", res.Header.Get("Content-Type"))
+		assert.Equal(t, "application/json", res.Header.Get("Content-Type"))
 		assert.Contains(t, rec.Body.String(), "name is required")
 		assert.Contains(t, rec.Body.String(), "nestedField is required")
 	})
