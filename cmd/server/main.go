@@ -10,7 +10,7 @@ import (
 
 	"github.com/MXLange/go-model/env"
 	"github.com/MXLange/go-model/internal/builder"
-	"github.com/MXLange/go-model/internal/domain/app"
+	"github.com/MXLange/go-model/internal/domain/user"
 	"github.com/MXLange/go-model/internal/infra/db"
 	"github.com/MXLange/go-model/internal/logger"
 	"github.com/go-chi/chi/v5"
@@ -46,12 +46,12 @@ func main() {
 		panic(err)
 	}
 
-	app, err := app.NewApp(ctx, dbConn, l)
+	user, err := user.NewUser(ctx, dbConn, l)
 	if err != nil {
 		panic(err)
 	}
 
-	builder.AddDomainEntity(app)
+	builder.AddDomainEntity(user)
 
 	if err := builder.Build(ctx); err != nil {
 		panic(err)

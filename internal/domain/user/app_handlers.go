@@ -1,10 +1,10 @@
-package app
+package user
 
 import (
 	"io"
 	"net/http"
 
-	"github.com/MXLange/go-model/internal/domain/app/dto"
+	"github.com/MXLange/go-model/internal/domain/user/dto"
 	"github.com/MXLange/go-model/internal/errors"
 	jsonschema "github.com/MXLange/go-model/internal/json_schema"
 	"github.com/MXLange/go-model/internal/logger"
@@ -42,8 +42,8 @@ func (h *handlers) Create(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		h.logger.Errorf(r.Context(), "%s handler - failed to read request body: %v", h.name, err)
-		appError := errors.New(http.StatusBadRequest).WithError(errors.NewError("", "invalid request body"))
-		appError.WriteResponse(w)
+		userError := errors.New(http.StatusBadRequest).WithError(errors.NewError("", "invalid request body"))
+		userError.WriteResponse(w)
 		return
 	}
 

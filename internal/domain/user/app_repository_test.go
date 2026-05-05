@@ -1,4 +1,4 @@
-package app
+package user
 
 import (
 	"context"
@@ -17,7 +17,7 @@ func Test_NewRepository(t *testing.T) {
 	t.Run("returns error when db is nil", func(t *testing.T) {
 		loggerMock := loggermocks.NewMockLoggerIF(t)
 
-		got, err := NewRepository("app", nil, loggerMock)
+		got, err := NewRepository("user", nil, loggerMock)
 
 		require.Error(t, err)
 		assert.ErrorIs(t, err, internalerrors.ErrNilDB)
@@ -29,7 +29,7 @@ func Test_NewRepository(t *testing.T) {
 		require.NoError(t, err)
 		t.Cleanup(func() { _ = db.Close() })
 
-		got, repoErr := NewRepository("app", db, nil)
+		got, repoErr := NewRepository("user", db, nil)
 
 		require.Error(t, repoErr)
 		assert.ErrorIs(t, repoErr, internalerrors.ErrNilLogger)
@@ -43,14 +43,14 @@ func Test_NewRepository(t *testing.T) {
 
 		loggerMock := loggermocks.NewMockLoggerIF(t)
 
-		got, repoErr := NewRepository("app", db, loggerMock)
+		got, repoErr := NewRepository("user", db, loggerMock)
 
 		require.NoError(t, repoErr)
 		require.NotNil(t, got)
 
 		repo, ok := got.(*repository)
 		require.True(t, ok)
-		assert.Equal(t, "app", repo.name)
+		assert.Equal(t, "user", repo.name)
 		assert.Equal(t, db, repo.db)
 		assert.Equal(t, loggerMock, repo.logger)
 	})
@@ -70,7 +70,7 @@ func TestRepositoryPing(t *testing.T) {
 			Return()
 
 		repo := &repository{
-			name:   "app",
+			name:   "user",
 			logger: loggerMock,
 			db:     db,
 		}
@@ -95,7 +95,7 @@ func TestRepositoryPing(t *testing.T) {
 			Return()
 
 		repo := &repository{
-			name:   "app",
+			name:   "user",
 			logger: loggerMock,
 			db:     db,
 		}
@@ -119,7 +119,7 @@ func TestRepositoryCreate(t *testing.T) {
 		Return()
 
 	repo := &repository{
-		name:   "app",
+		name:   "user",
 		logger: loggerMock,
 		db:     db,
 	}

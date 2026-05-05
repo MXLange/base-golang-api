@@ -1,4 +1,4 @@
-package app
+package user
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-type App struct {
+type User struct {
 	name       string
 	logger     logger.LoggerIF
 	handlers   handlersIF
@@ -18,7 +18,7 @@ type App struct {
 	db         *sql.DB
 }
 
-func NewApp(ctx context.Context, db *sql.DB, logger logger.LoggerIF) (*App, error) {
+func NewUser(ctx context.Context, db *sql.DB, logger logger.LoggerIF) (*User, error) {
 
 	if db == nil {
 		return nil, errors.ErrNilDB
@@ -28,10 +28,10 @@ func NewApp(ctx context.Context, db *sql.DB, logger logger.LoggerIF) (*App, erro
 		return nil, errors.ErrNilLogger
 	}
 
-	name := "App"
+	name := "User"
 
-	logger.Infof(ctx, "Initializing %s application.", name)
-	defer logger.Infof(ctx, "Finished initializing %s application.", name)
+	logger.Infof(ctx, "Initializing %s userlication.", name)
+	defer logger.Infof(ctx, "Finished initializing %s userlication.", name)
 
 	repository, err := NewRepository(name, db, logger)
 	if err != nil {
@@ -48,7 +48,7 @@ func NewApp(ctx context.Context, db *sql.DB, logger logger.LoggerIF) (*App, erro
 		return nil, err
 	}
 
-	return &App{
+	return &User{
 		name:       name,
 		logger:     logger,
 		handlers:   handlers,
@@ -58,28 +58,28 @@ func NewApp(ctx context.Context, db *sql.DB, logger logger.LoggerIF) (*App, erro
 	}, nil
 }
 
-func (a *App) GetServices() servicesIF {
+func (a *User) GetServices() servicesIF {
 	return a.services
 }
 
-func (a *App) GetName() string {
+func (a *User) GetName() string {
 	return a.name
 }
 
-func (a *App) Build(ctx context.Context, r *chi.Mux) error {
-	a.logger.Infof(ctx, "Building %s application routes.", a.name)
-	defer a.logger.Infof(ctx, "Finished building %s application routes.", a.name)
-	return newAppRoutes(ctx, r, a.handlers)
+func (a *User) Build(ctx context.Context, r *chi.Mux) error {
+	a.logger.Infof(ctx, "Building %s userlication routes.", a.name)
+	defer a.logger.Infof(ctx, "Finished building %s userlication routes.", a.name)
+	return newUserRoutes(ctx, r, a.handlers)
 }
 
-func (a *App) Health(ctx context.Context) error {
-	a.logger.Infof(ctx, "%s application - received request to ping the database.", a.name)
+func (a *User) Health(ctx context.Context) error {
+	a.logger.Infof(ctx, "%s userlication - received request to ping the database.", a.name)
 	return a.services.Health(ctx)
 }
 
-func (a *App) Close(ctx context.Context) error {
-	a.logger.Infof(ctx, "Closing %s application.", a.name)
-	defer a.logger.Infof(ctx, "Finished closing %s application.", a.name)
+func (a *User) Close(ctx context.Context) error {
+	a.logger.Infof(ctx, "Closing %s userlication.", a.name)
+	defer a.logger.Infof(ctx, "Finished closing %s userlication.", a.name)
 	if a.db != nil {
 		if err := a.db.Close(); err != nil {
 			return err

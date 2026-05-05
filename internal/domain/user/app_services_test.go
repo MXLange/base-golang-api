@@ -1,11 +1,11 @@
-package app
+package user
 
 import (
 	"context"
 	stderrors "errors"
 	"testing"
 
-	appmocks "github.com/MXLange/go-model/internal/domain/app/mocks"
+	usermocks "github.com/MXLange/go-model/internal/domain/user/mocks"
 	internalerrors "github.com/MXLange/go-model/internal/errors"
 	loggermocks "github.com/MXLange/go-model/internal/logger/mocks"
 	"github.com/stretchr/testify/assert"
@@ -17,7 +17,7 @@ func TestNewServices(t *testing.T) {
 	t.Run("returns error when repository is nil", func(t *testing.T) {
 		loggerMock := loggermocks.NewMockLoggerIF(t)
 
-		got, err := NewServices("app", nil, loggerMock)
+		got, err := NewServices("user", nil, loggerMock)
 
 		require.Error(t, err)
 		assert.ErrorIs(t, err, internalerrors.ErrNilRepository)
@@ -25,9 +25,9 @@ func TestNewServices(t *testing.T) {
 	})
 
 	t.Run("returns error when logger is nil", func(t *testing.T) {
-		repositoryMock := appmocks.NewMockRepositoryIF(t)
+		repositoryMock := usermocks.NewMockRepositoryIF(t)
 
-		got, err := NewServices("app", repositoryMock, nil)
+		got, err := NewServices("user", repositoryMock, nil)
 
 		require.Error(t, err)
 		assert.ErrorIs(t, err, internalerrors.ErrNilLogger)
@@ -35,17 +35,17 @@ func TestNewServices(t *testing.T) {
 	})
 
 	t.Run("returns services when params are valid", func(t *testing.T) {
-		repositoryMock := appmocks.NewMockRepositoryIF(t)
+		repositoryMock := usermocks.NewMockRepositoryIF(t)
 		loggerMock := loggermocks.NewMockLoggerIF(t)
 
-		got, err := NewServices("app", repositoryMock, loggerMock)
+		got, err := NewServices("user", repositoryMock, loggerMock)
 
 		require.NoError(t, err)
 		require.NotNil(t, got)
 
 		service, ok := got.(*services)
 		require.True(t, ok)
-		assert.Equal(t, "app", service.name)
+		assert.Equal(t, "user", service.name)
 		assert.Equal(t, repositoryMock, service.repository)
 		assert.Equal(t, loggerMock, service.logger)
 	})
@@ -53,7 +53,7 @@ func TestNewServices(t *testing.T) {
 
 func TestServicesHealth(t *testing.T) {
 	t.Run("returns nil when repository ping succeeds", func(t *testing.T) {
-		repositoryMock := appmocks.NewMockRepositoryIF(t)
+		repositoryMock := usermocks.NewMockRepositoryIF(t)
 		loggerMock := loggermocks.NewMockLoggerIF(t)
 
 		loggerMock.EXPECT().
@@ -64,7 +64,7 @@ func TestServicesHealth(t *testing.T) {
 			Return(nil)
 
 		service := &services{
-			name:       "app",
+			name:       "user",
 			logger:     loggerMock,
 			repository: repositoryMock,
 		}
@@ -75,7 +75,7 @@ func TestServicesHealth(t *testing.T) {
 	})
 
 	t.Run("returns repository ping error", func(t *testing.T) {
-		repositoryMock := appmocks.NewMockRepositoryIF(t)
+		repositoryMock := usermocks.NewMockRepositoryIF(t)
 		loggerMock := loggermocks.NewMockLoggerIF(t)
 		expectedErr := stderrors.New("ping failed")
 
@@ -87,7 +87,7 @@ func TestServicesHealth(t *testing.T) {
 			Return(expectedErr)
 
 		service := &services{
-			name:       "app",
+			name:       "user",
 			logger:     loggerMock,
 			repository: repositoryMock,
 		}
@@ -101,7 +101,7 @@ func TestServicesHealth(t *testing.T) {
 
 func TestServicesCreate(t *testing.T) {
 	t.Run("returns repository result", func(t *testing.T) {
-		repositoryMock := appmocks.NewMockRepositoryIF(t)
+		repositoryMock := usermocks.NewMockRepositoryIF(t)
 		loggerMock := loggermocks.NewMockLoggerIF(t)
 
 		loggerMock.EXPECT().
@@ -112,7 +112,7 @@ func TestServicesCreate(t *testing.T) {
 			Return(7, nil)
 
 		service := &services{
-			name:       "app",
+			name:       "user",
 			logger:     loggerMock,
 			repository: repositoryMock,
 		}
@@ -123,8 +123,8 @@ func TestServicesCreate(t *testing.T) {
 		assert.Nil(t, gotErr)
 	})
 
-	t.Run("returns repository app error", func(t *testing.T) {
-		repositoryMock := appmocks.NewMockRepositoryIF(t)
+	t.Run("returns repository user error", func(t *testing.T) {
+		repositoryMock := usermocks.NewMockRepositoryIF(t)
 		loggerMock := loggermocks.NewMockLoggerIF(t)
 		expectedErr := internalerrors.New(400).WithError(internalerrors.NewError("", "invalid name"))
 
@@ -136,7 +136,7 @@ func TestServicesCreate(t *testing.T) {
 			Return(0, expectedErr)
 
 		service := &services{
-			name:       "app",
+			name:       "user",
 			logger:     loggerMock,
 			repository: repositoryMock,
 		}

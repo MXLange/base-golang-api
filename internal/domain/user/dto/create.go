@@ -1,7 +1,7 @@
 package dto
 
 type CreateIN struct {
-	Name *string `json:"name" example:"My App"`
+	Name *string `json:"name" example:"My User"`
 	NestedField *NestedField `json:"nestedField"`
 }
 
@@ -14,7 +14,7 @@ var CreateInSchema = `{
 	"properties": {
 		"name": {
 			"type": "string",
-			"example": "My App"
+			"example": "My User"
 		},
 		"nestedField": {
 			"type": "object",
@@ -32,5 +32,5 @@ var CreateInSchema = `{
 
 type CreateOUT struct {
 	ID   int    `json:"id" example:"1"`
-	Name string `json:"name" example:"My App"`
+	Name string `json:"name" example:"My User"`
 }

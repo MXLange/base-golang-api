@@ -1,4 +1,4 @@
-package app
+package user
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func newAppRoutes(ctx context.Context, r chi.Router, handlers handlersIF) error {
+func newUserRoutes(ctx context.Context, r chi.Router, handlers handlersIF) error {
 	if handlers == nil {
 		return errors.ErrNilHandler
 	}
@@ -16,7 +16,7 @@ func newAppRoutes(ctx context.Context, r chi.Router, handlers handlersIF) error 
 		return errors.ErrNilMux
 	}
 
-	r.Post("/app", handlers.Create)
+	r.Post("/user", handlers.Create)
 
 	return nil
 }

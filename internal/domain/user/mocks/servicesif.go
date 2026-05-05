@@ -96,8 +96,8 @@ func (_c *MockServicesIF_Create_Call) Run(run func(ctx context.Context, name str
 	return _c
 }
 
-func (_c *MockServicesIF_Create_Call) Return(n int, appError *errors.AppError) *MockServicesIF_Create_Call {
-	_c.Call.Return(n, appError)
+func (_c *MockServicesIF_Create_Call) Return(n int, userError *errors.AppError) *MockServicesIF_Create_Call {
+	_c.Call.Return(n, userError)
 	return _c
 }
 

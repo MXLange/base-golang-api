@@ -96,8 +96,8 @@ func (_c *MockRepositoryIF_Create_Call) Run(run func(ctx context.Context, name s
 	return _c
 }
 
-func (_c *MockRepositoryIF_Create_Call) Return(n int, appError *errors.AppError) *MockRepositoryIF_Create_Call {
-	_c.Call.Return(n, appError)
+func (_c *MockRepositoryIF_Create_Call) Return(n int, userError *errors.AppError) *MockRepositoryIF_Create_Call {
+	_c.Call.Return(n, userError)
 	return _c
 }
 
