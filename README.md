@@ -31,7 +31,7 @@ The server starts in `cmd/server/main.go` and follows this flow:
 The builder contract is defined in `internal/domain/domain_interfaces.go`:
 
 ```go
-type EntityIF interface {
+type DomainIF interface {
 	Build(ctx context.Context, r *chi.Mux) error
 	Health(ctx context.Context) error
 	Close(ctx context.Context) error
@@ -96,10 +96,10 @@ Valid payload:
 
 ```json
 {
-  "name": "My App",
-  "nestedField": {
-    "data": "Some data"
-  }
+    "name": "My App",
+    "nestedField": {
+        "data": "Some data"
+    }
 }
 ```
 
@@ -113,12 +113,12 @@ When the payload does not pass JSON Schema validation, the API returns `400` wit
 
 ```json
 {
-  "errors": [
-    {
-      "field": "name",
-      "message": "name is required"
-    }
-  ]
+    "errors": [
+        {
+            "field": "name",
+            "message": "name is required"
+        }
+    ]
 }
 ```
 
@@ -225,7 +225,7 @@ To add another domain using the same model:
 
 1. Create a package under `internal/domain/<name>`.
 2. Implement handlers, services, repository, and routes.
-3. Make the entity implement `domain.EntityIF`.
+3. Make the entity implement `domain.DomainIF`.
 4. Initialize the entity in `cmd/server/main.go`.
 5. Register it in the builder:
 
