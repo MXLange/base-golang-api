@@ -8,7 +8,7 @@ The main goal is to keep application composition separate from domain behavior:
 - `env`: environment loading and validation.
 - `internal/builder`: domain entity assembly on top of the main router.
 - `internal/domain`: shared contract for domain entities.
-- `internal/domain/app`: example domain with handlers, services, repository, DTOs, and routes.
+- `internal/domain/users`: example domain with handlers, services, repository, DTOs, and routes.
 - `internal/infra/db`: database connection infrastructure.
 - `internal/errors`: structured API error responses.
 - `internal/json_schema`: request payload validation with JSON Schema.
@@ -24,7 +24,7 @@ The server starts in `cmd/server/main.go` and follows this flow:
 4. Open the database connection through `internal/infra/db`.
 5. Create the `builder`.
 6. Initialize the `app` domain entity.
-7. Register the domain entity with `AddDomainEntity`.
+7. Register the domain entity with `AddDomainInterface`.
 8. Run `Build`, which mounts routes under `/api/v1`.
 9. Start the HTTP server and handle graceful shutdown with `SIGINT` and `SIGTERM`.
 
@@ -45,7 +45,7 @@ With this contract, each new domain can expose its own routes, health check, and
 The `internal/builder` package centralizes API assembly:
 
 - receives the main router;
-- receives domain entities through `AddDomainEntity`;
+- receives domain entities through `AddDomainInterface`;
 - creates an internal API router;
 - calls `Build` on each domain entity;
 - mounts everything under the `/api/v1` prefix;
@@ -57,7 +57,7 @@ This pattern keeps `main.go` focused on composition while each domain owns its i
 
 ## App Domain
 
-The example domain lives in `internal/domain/app` and is split into the following layers:
+The example domain lives in `internal/domain/users` and is split into the following layers:
 
 - `app.go`: initializes repository, services, and handlers.
 - `app_routes.go`: registers HTTP routes for the domain.
@@ -88,7 +88,7 @@ OK
 ### Create App
 
 ```http
-POST /api/v1/app
+POST /api/v1/users
 Content-Type: application/json
 ```
 
@@ -178,7 +178,7 @@ curl -i http://localhost:8080/health
 Create with a valid payload:
 
 ```sh
-curl -i -X POST http://localhost:8080/api/v1/app \
+curl -i -X POST http://localhost:8080/api/v1/users \
   -H 'Content-Type: application/json' \
   -d '{
     "name": "My App",
@@ -191,7 +191,7 @@ curl -i -X POST http://localhost:8080/api/v1/app \
 Create with an invalid payload:
 
 ```sh
-curl -i -X POST http://localhost:8080/api/v1/app \
+curl -i -X POST http://localhost:8080/api/v1/users \
   -H 'Content-Type: application/json' \
   -d '{}'
 ```
@@ -216,7 +216,7 @@ go test ./...
 
 Current observed state:
 
-- tests in `internal/domain/app` pass;
+- tests in `internal/domain/users` pass;
 - tests in `internal/errors` fail because they expect the `code` field in the serialized JSON, but the current `AppError.MarshalJSON` implementation omits that field.
 
 ## Adding a New Domain
@@ -230,7 +230,7 @@ To add another domain using the same model:
 5. Register it in the builder:
 
 ```go
-builder.AddDomainEntity(newEntity)
+builder.AddDomainInterface(newEntity)
 ```
 
 The builder will include the new domain routes under `/api/v1` and include the entity in `/health` and shutdown handling.

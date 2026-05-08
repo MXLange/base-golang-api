@@ -1,24 +1,24 @@
 template: testify
 packages:
-  github.com/MXLange/go-model/internal/domain/app:
-    config:
-      dir: internal/domain/app/mocks
-      pkgname: mocks
-      all: false
-    interfaces:
-      repositoryIF:
+    github.com/MXLange/go-model/internal/domain/users:
         config:
-          filename: repositoryif.go
-          structname: MockRepositoryIF
-      servicesIF:
+            dir: internal/domain/users/mocks
+            pkgname: mocks
+            all: false
+        interfaces:
+            repositoryIF:
+                config:
+                    filename: repositoryif.go
+                    structname: MockRepositoryIF
+            servicesIF:
+                config:
+                    filename: servicesif.go
+                    structname: MockServicesIF
+    github.com/MXLange/go-model/internal/logger:
         config:
-          filename: servicesif.go
-          structname: MockServicesIF
-  github.com/MXLange/go-model/internal/logger:
-    config:
-      dir: internal/logger/mocks
-      pkgname: mocks
-      filename: loggerif.go
-      structname: MockLoggerIF
-    interfaces:
-      LoggerIF:
+            dir: internal/logger/mocks
+            pkgname: mocks
+            filename: loggerif.go
+            structname: MockLoggerIF
+        interfaces:
+            LoggerIF:
