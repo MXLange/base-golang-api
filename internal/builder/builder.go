@@ -13,7 +13,7 @@ import (
 type Builder struct {
 	logger         logger.LoggerIF
 	r              *chi.Mux
-	domainEntities []domain.EntityIF
+	domainInterfaces []domain.DomainIF
 }
 
 func New(r *chi.Mux, logger logger.LoggerIF) (*Builder, error) {
@@ -28,24 +28,24 @@ func New(r *chi.Mux, logger logger.LoggerIF) (*Builder, error) {
 	return &Builder{
 		r:              r,
 		logger:         logger,
-		domainEntities: make([]domain.EntityIF, 0),
+		domainInterfaces: make([]domain.DomainIF, 0),
 	}, nil
 }
 
-func (b *Builder) AddDomainEntity(entity domain.EntityIF) *Builder {
-	b.domainEntities = append(b.domainEntities, entity)
+func (b *Builder) AddDomainInterface(entity domain.DomainIF) *Builder {
+	b.domainInterfaces = append(b.domainInterfaces, entity)
 	return b
 }
 
 func (b *Builder) Build(ctx context.Context) error {
-	b.logger.Info(ctx, "Building domain entities...")
-	defer b.logger.Info(ctx, "Finished building domain entities.")
+	b.logger.Info(ctx, "Building domains...")
+	defer b.logger.Info(ctx, "Building domains finished")
 
 	api := chi.NewRouter()
 
 	
 
-	for _, entity := range b.domainEntities {
+	for _, entity := range b.domainInterfaces {
 		if err := entity.Build(ctx, api); err != nil {
 			return err
 		}
@@ -76,10 +76,10 @@ func (b *Builder) setRoutes() {
 	b.r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		rCtx := r.Context()
 		b.logger.Info(rCtx, "Received health check request.")
-		defer b.logger.Info(rCtx, "Finished processing health check request.")
-		for _, entity := range b.domainEntities {
-			if err := entity.Health(rCtx); err != nil {
-				b.logger.Errorf(rCtx, "Health check failed for entity: %v", err)
+		defer b.logger.Info(rCtx, "Health check request finished.")
+		for _, domain := range b.domainInterfaces {
+			if err := domain.Health(rCtx); err != nil {
+				b.logger.Errorf(rCtx, "Health check failed for domain: %v", err)
 				http.Error(w, "Service Unavailable", http.StatusServiceUnavailable)
 				return
 			}
@@ -90,10 +90,10 @@ func (b *Builder) setRoutes() {
 }
 
 func (b *Builder) Close(ctx context.Context) error {
-	b.logger.Info(ctx, "Closing domain entities...")
-	defer b.logger.Info(ctx, "Finished closing domain entities.")
-	for _, entity := range b.domainEntities {
-		if err := entity.Close(ctx); err != nil {
+	b.logger.Info(ctx, "Closing domains...")
+	defer b.logger.Info(ctx, "Closing domains finished")
+	for _, domain := range b.domainInterfaces {
+		if err := domain.Close(ctx); err != nil {
 			b.logger.Warnf(ctx, "Error closing entity: %v", err)
 		}
 	}

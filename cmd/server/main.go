@@ -51,7 +51,7 @@ func main() {
 		panic(err)
 	}
 
-	builder.AddDomainEntity(user)
+	builder.AddDomainInterface(user)
 
 	if err := builder.Build(ctx); err != nil {
 		panic(err)
